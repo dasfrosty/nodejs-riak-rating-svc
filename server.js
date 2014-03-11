@@ -4,71 +4,10 @@ var restify = require('restify');
 var http = require('http');
 
 ////////////////////////////
-// riak functions
+// configure riak
 ////////////////////////////
 
-function getRiakUserPath(userId) {
-  //TODO: check userId is valid id
-  return '/buckets/test/keys/' + userId;
-};
-
-function getRiakRequestOptions(method, path) {
-  var headers = {};
-  if (method == 'PUT') {
-    headers = {
-      'Content-Type': 'application/json'
-    };
-  };
-  return {
-    hostname: 'localhost',
-    port: 8098,
-    path: path,
-    method: method,
-    headers: headers,
-    agent: false
-  };
-};
-
-function riakGet(path, callback) {
-  var options = getRiakRequestOptions('GET', path);
-  var req = http.request(options, function(res) {
-    console.log('STATUS: ' + res.statusCode);
-    console.log('HEADERS: ' + JSON.stringify(res.headers));
-    res.setEncoding('utf8');
-    res.on('data', function (chunk) {
-      //FIXME: assume there's one chunk for now
-      callback(chunk);
-    });
-  });
-
-  req.on('error', function(e) {
-    //FIXME: handle this case
-    console.log('problem with request: ' + e.message);
-  });
-
-  req.end();
-};
-
-function riakPut(path, obj, callback) {
-  var options = getRiakRequestOptions('PUT', path);
-  var req = http.request(options, function(res) {
-    console.log('STATUS: ' + res.statusCode);
-    console.log('HEADERS: ' + JSON.stringify(res.headers));
-    res.setEncoding('utf8');
-    res.on('data', function (chunk) {
-      //FIXME: assume there's one chunk for now
-      callback(chunk);
-    });
-  });
-
-  req.on('error', function(e) {
-    //FIXME: handle this case
-    console.log('problem with request: ' + e.message);
-  });
-
-  req.write(JSON.stringify(obj));
-  req.end();
-};
+var riak = require('./lib/riak.js').createRiak('localhost', 8098);
 
 ////////////////////////////
 // handler functions
@@ -76,8 +15,7 @@ function riakPut(path, obj, callback) {
 
 function getUser(req, res, next) {
   console.log('getUser() userId = %s', req.params.userId);
-  var path = getRiakUserPath(req.params.userId);
-  riakGet(path, function (data) {
+  riak.load('test', req.params.userId, function (data) {
     res.end(data);
   });
 };
