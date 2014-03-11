@@ -15,8 +15,9 @@ var riak = require('./lib/riak.js').createRiak('localhost', 8098);
 
 function getUser(req, res, next) {
   console.log('getUser() userId = %s', req.params.userId);
-  riak.load('test', req.params.userId, function (data) {
-    res.end(data);
+  riak.loadObject('test', req.params.userId, function (obj) {
+    console.log(obj);
+    res.end(JSON.stringify(obj));
   });
 };
 
