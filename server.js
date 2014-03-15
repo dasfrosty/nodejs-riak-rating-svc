@@ -14,8 +14,9 @@ var riak = require('./lib/riak.js').createRiak('localhost', 8098);
 ////////////////////////////
 
 function getUser(req, res, next) {
-  console.log('getUser() userId = %s', req.params.userId);
-  riak.loadObject('test', req.params.userId, function (obj) {
+  var userId = req.params.userId;
+  console.log('getUser() userId = %s', userId);
+  riak.loadObject('test', userId, function (obj) {
     console.log(obj);
     res.end(JSON.stringify(obj));
   });
@@ -23,11 +24,13 @@ function getUser(req, res, next) {
 
 function putUser(req, res, next) {
   var userId = req.params.userId;
-  console.log('putUser() userId = %s', userId);
-  var path = getRiakUserPath(userId) + "?returnbody=true";
-  var obj = {userId: userId, username: "test", email: "test@example.com"};
-  riakPut(path, obj, function (data) {
-    res.end(data);
+  var username = 'dastesty';
+  var email = 'dastesty@example.com';
+  var user = {userId: userId, username: username, email: email};
+  console.log('putUser() user = %s', JSON.stringify(user));
+  riak.putObject('test', userId, user, function (obj) {
+    console.log(obj);
+    res.end(JSON.stringify(obj));
   });
 };
 
@@ -56,6 +59,7 @@ server.pre(restify.pre.userAgentConnection());
 
 // setup routes
 server.get('/user/:userId', getUser);
+server.get('/user/put/:userId', putUser); // mimic PUT through browser
 server.put('/user/:userId', putUser);
 server.get('/user/:userId/:itemType/:itemId', getUserRating);
 server.put('/user/:userId/:itemType/:itemId/:rating', putUserRating);
