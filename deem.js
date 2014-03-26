@@ -85,9 +85,10 @@ Deem.prototype._configure = function () {
 Deem.prototype.listen = function (port) {
   console.log(this.riak);
   var that = this;
-  that.server.listen(port, function () {
+  this.server.listen(port, function () {
     console.log('%s listening at %s -- %s', that.server.name, that.server.url, that.riak);
   });
+  return this;
 };
 
 exports.createDeem = function (riakHostname, riakPort) {

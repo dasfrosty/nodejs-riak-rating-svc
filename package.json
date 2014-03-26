@@ -1,9 +1,24 @@
 {
   "name": "deem",
-  "description": "rating service",
   "version": "0.0.1",
-  "private": true,
+  "description": "rating service",
+  "keywords": ["ratings", "rest", "restify", "riak"],
+  "homepage": "https://github.com/dasfrosty/deem",
+  "license": "MIT",
+  "repository": {
+  	"type": "git",
+  	"url": "https://github.com/dasfrosty/deem.git"
+  },
+  "scripts": {
+  	"start": "node index.js",
+  	"test": "mocha test/test.js"
+  },
   "dependencies": {
     "restify": "2.6.x"
+  },
+  "devDependencies": {
+    "mocha": "*",
+    "should": "*",
+    "supertest": "*"
   }
 }
