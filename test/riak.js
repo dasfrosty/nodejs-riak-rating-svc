@@ -8,7 +8,7 @@ var riakjs = require(__dirname + '/../lib/riak.js');
 var riakHostname = 'localhost';
 var riakPort = 8098;
 var riakBaseUrl = 'http://' + riakHostname + ':' + riakPort;
-var riakBucket = 'test_bucket';
+var riakBucket = 'deem_test_riak';
 
 
 ////////////////////////////

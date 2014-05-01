@@ -6,7 +6,7 @@ var deemjs = require(__dirname + '/../lib/deem.js');
 
 var riakHostname = 'localhost';
 var riakPort = 8098;
-var riakBucket = 'deem_test';
+var riakBucket = 'deem_test_deem';
 
 
 describe('Deem API', function () {
