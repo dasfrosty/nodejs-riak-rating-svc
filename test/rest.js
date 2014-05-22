@@ -23,19 +23,30 @@ describe('Deem REST API', function () {
     var expected = {userId: 8654, email: 'redbaron@snoopy.com', password: 'sopwithcamel'};
     request(restBaseUrl)
       .put('/user/' + expected.userId)
+      .accept('application/json')
       .send(expected)
-      // .expect('Content-Type', /json/)
+      .expect('Content-Type', /json/)
       .expect(200)
       .end(function(err, res) {
         if (err) {
           throw err;
         }
-        //res.body.userId.should.equal(expected.userId);
-        console.log(res.body);
-        done();
+        res.body.userId.should.equal(expected.userId);
+        res.body.email.should.equal(expected.email);
+        res.body.password.should.equal(expected.password);
+        request(restBaseUrl)
+          .get('/user/' + expected.userId)
+          .accept('application/json')
+          .expect('Content-Type', /json/)
+          .expect(200)
+          .end(function(err, res) {
+            should.not.exist(err);
+            res.body.userId.should.equal(expected.userId);
+            res.body.email.should.equal(expected.email);
+            res.body.password.should.equal(expected.password);
+            done();
+          });
       });
   });
 
 });
-
-

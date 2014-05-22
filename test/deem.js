@@ -13,6 +13,13 @@ describe('Deem API', function () {
 
   var deem = deemjs.createDeem(riakHostname, riakPort, riakBucket);
 
+  it('should return null for a user that does not exist', function (done) {
+    deem.getUser(95846474836363, function (actual) {
+      should.not.exist(actual);
+      done();
+    });
+  });
+
   it('should load a user that gets put', function (done) {
     var expected = {userId: 8654, email: 'redbaron@snoopy.com', password: 'sopwithcamel'};
     deem.putUser(expected.userId, expected.email, expected.password, function (actual) {
@@ -40,13 +47,6 @@ describe('Deem API', function () {
         actual.password.should.equal(expected.password);
         done();
       });
-    });
-  });
-
-  it('should return null for a user that does not exist', function (done) {
-    deem.getUser(95846474836363, function (actual) {
-      should.not.exist(actual);
-      done();
     });
   });
 

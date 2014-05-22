@@ -17,18 +17,6 @@ var riakBucket = 'deem_test_riak';
 
 describe('Riak native', function () {
 
-  it('should list buckets', function (done) {
-    request('http://localhost:8098')
-      .get('/buckets/?buckets=true')
-      .expect('Content-Type', /json/)
-      .expect(200)
-      .end(function (err, res) {
-        should.not.exist(err);
-        should(res.body.buckets.length).greaterThan(1);
-        done();
-      });
-  });
-
   it('should return an object that gets put', function (done) {
     var obj = {id: 7654, foo: 'bar'};
     var path = '/buckets/' + riakBucket + '/keys/' + obj.id;
@@ -40,7 +28,7 @@ describe('Riak native', function () {
       .end(function (err, res) {
         should.not.exist(err);
         res.body.id.should.equal(obj.id);
-        res.body.foo.should.equal('bar');
+        res.body.foo.should.equal(obj.foo);
         request(riakBaseUrl)
           .get(path)
           .expect('Content-Type', /json/)
@@ -53,6 +41,19 @@ describe('Riak native', function () {
           });
       });
   });
+
+  it('should list buckets', function (done) {
+    request(riakBaseUrl)
+      .get('/buckets/?buckets=true')
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .end(function (err, res) {
+        should.not.exist(err);
+        should(res.body.buckets.length).greaterThan(0);
+        done();
+      });
+  });
+
 });
 
 
@@ -63,6 +64,13 @@ describe('Riak native', function () {
 describe('Riak lib', function () {
 
   var riak = riakjs.createRiak(riakHostname, riakPort);
+
+  it('should return null for a key that does not exist', function (done) {
+    riak.loadObject(riakBucket, 95846474836363, function (returnObj) {
+      should.not.exist(returnObj);
+      done();
+    });
+  });
 
   it('should load an object that gets put', function (done) {
     var obj = {id: 7654, foo: 'bar'};
@@ -90,13 +98,4 @@ describe('Riak lib', function () {
     });
   });
 
-  it('should return null for a key that does not exist', function (done) {
-    riak.loadObject(riakBucket, 95846474836363, function (returnObj) {
-      should.not.exist(returnObj);
-      done();
-    });
-  });
-
 });
-
-
