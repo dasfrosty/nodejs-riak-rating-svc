@@ -12,10 +12,10 @@ var riakBucket = 'deem_test_riak';
 
 
 ////////////////////////////
-// Riak native tests
+// riak server tests
 ////////////////////////////
 
-describe('Riak native', function () {
+describe('riak server', function () {
 
   it('should return an object that gets put', function (done) {
     var obj = {id: 7654, foo: 'bar'};
@@ -58,10 +58,10 @@ describe('Riak native', function () {
 
 
 ////////////////////////////
-// Riak lib tests
+// riak module tests
 ////////////////////////////
 
-describe('Riak lib', function () {
+describe('riak module', function () {
 
   var riak = riakjs.createRiak(riakHostname, riakPort);
 
