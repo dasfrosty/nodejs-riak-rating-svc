@@ -10,7 +10,8 @@ var riakPort = 8098;
 var riakBucket = 'deem_test_rest';
 
 var restPort = 8081;
-var restBaseUrl = 'http://localhost:' + restPort;
+var contextPath = '/deem';
+var restBaseUrl = 'http://localhost:' + restPort + contextPath;
 
 describe('Deem REST API', function () {
 
