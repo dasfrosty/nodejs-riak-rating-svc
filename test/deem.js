@@ -9,45 +9,105 @@ var riakPort = 8098;
 var riakBucket = 'deem_test_deem';
 
 
-describe('Deem API', function () {
+describe('Deem', function () {
 
   var deem = deemjs.createDeem(riakHostname, riakPort, riakBucket);
 
-  it('should return null for a user that does not exist', function (done) {
-    deem.getUser(95846474836363, function (actual) {
-      should.not.exist(actual);
-      done();
-    });
-  });
+  describe('User API', function () {
 
-  it('should load a user that gets put', function (done) {
-    var expected = {userId: 8654, email: 'redbaron@snoopy.com', password: 'sopwithcamel'};
-    deem.putUser(expected.userId, expected.email, expected.password, function (actual) {
-      actual.userId.should.equal(expected.userId);
-      actual.email.should.equal(expected.email);
-      actual.password.should.equal(expected.password);
-      deem.getUser(expected.userId, function (actual) {
-        actual.userId.should.equal(expected.userId);
-        actual.email.should.equal(expected.email);
-        actual.password.should.equal(expected.password);
+    var expected = {
+      userId: 8654,
+      email: 'redbaron@snoopy.com',
+      password: 'sopwithcamel'
+    };
+
+    it('should return null for a user that does not exist', function (done) {
+      deem.getUser(95846474836363, function (actual) {
+        should.not.exist(actual);
         done();
       });
     });
-  });
 
-  it('should update a user that gets put', function (done) {
-    var expected = {userId: 8654, email: 'snoopy@redbaron.com', password: '3plane'};
-    deem.putUser(expected.userId, expected.email, expected.password, function (actual) {
-      actual.userId.should.equal(expected.userId);
-      actual.email.should.equal(expected.email);
-      actual.password.should.equal(expected.password);
-      deem.getUser(expected.userId, function (actual) {
+    it('should load a user that gets put', function (done) {
+      deem.putUser(expected.userId, expected.email, expected.password, function (actual) {
         actual.userId.should.equal(expected.userId);
         actual.email.should.equal(expected.email);
         actual.password.should.equal(expected.password);
+        deem.getUser(expected.userId, function (actual) {
+          actual.userId.should.equal(expected.userId);
+          actual.email.should.equal(expected.email);
+          actual.password.should.equal(expected.password);
+          done();
+        });
+      });
+    });
+
+    it('should update a user that gets put', function (done) {
+      var newPassword = '3plane';
+      deem.putUser(expected.userId, expected.email, newPassword, function (actual) {
+        actual.userId.should.equal(expected.userId);
+        actual.email.should.equal(expected.email);
+        actual.password.should.equal(newPassword);
+        deem.getUser(expected.userId, function (actual) {
+          actual.userId.should.equal(expected.userId);
+          actual.email.should.equal(expected.email);
+          actual.password.should.equal(newPassword);
+          done();
+        });
+      });
+    });
+
+  });
+
+  describe('User Rating API', function () {
+
+    var expected = {
+      category: 'stuff',
+      itemId: 7432,
+      userId: 8654,
+      rating: 4
+    };
+
+    it('should return null for a rating that does not exist', function (done) {
+      deem.getUserRating(expected.category, expected.itemId, 95846474836363, function (actual) {
+        should.not.exist(actual);
         done();
       });
     });
+
+    it('should load a rating that gets put', function (done) {
+      deem.putUserRating(expected.category, expected.itemId, expected.userId, expected.rating, function (actual) {
+        actual.category.should.equal(expected.category);
+        actual.itemId.should.equal(expected.itemId);
+        actual.userId.should.equal(expected.userId);
+        actual.rating.should.equal(expected.rating);
+        deem.getUserRating(expected.category, expected.itemId, expected.userId, function (actual) {
+          actual.category.should.equal(expected.category);
+          actual.itemId.should.equal(expected.itemId);
+          actual.userId.should.equal(expected.userId);
+          actual.rating.should.equal(expected.rating);
+          done();
+        });
+      });
+    });
+
+    it('should update a rating that gets put', function (done) {
+      var newRating = expected.rating + 1;
+      deem.putUserRating(expected.category, expected.itemId, expected.userId, newRating, function (actual) {
+        actual.category.should.equal(expected.category);
+        actual.itemId.should.equal(expected.itemId);
+        actual.userId.should.equal(expected.userId);
+        actual.rating.should.equal(newRating);
+        deem.getUserRating(expected.category, expected.itemId, expected.userId, function (actual) {
+          actual.category.should.equal(expected.category);
+          actual.itemId.should.equal(expected.itemId);
+          actual.userId.should.equal(expected.userId);
+          actual.rating.should.equal(newRating);
+          done();
+        });
+      });
+    });
+
   });
 
 });
