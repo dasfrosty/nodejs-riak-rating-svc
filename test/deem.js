@@ -59,7 +59,7 @@ describe('Deem', function () {
 
   });
 
-  describe('User Rating API', function () {
+  describe('Rating API', function () {
 
     var expected = {
       category: 'stuff',
