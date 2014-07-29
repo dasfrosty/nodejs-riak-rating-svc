@@ -66,7 +66,8 @@ describe('riak module', function () {
   var riak = riakjs.createRiak(riakHostname, riakPort);
 
   it('should return null for a key that does not exist', function (done) {
-    riak.loadObject(riakBucket, 95846474836363, function (returnObj) {
+    riak.getObject(riakBucket, 95846474836363, function (err, returnObj) {
+      should.not.exist(err);
       should.not.exist(returnObj);
       done();
     });
@@ -74,10 +75,14 @@ describe('riak module', function () {
 
   it('should load an object that gets put', function (done) {
     var obj = {id: 7654, foo: 'bar'};
-    riak.putObject(riakBucket, obj.id, obj, function (returnObj) {
+    riak.putObject(riakBucket, obj.id, obj, function (err, returnObj) {
+      should.not.exist(err);
+      should.exist(returnObj);
       returnObj.id.should.equal(obj.id);
       returnObj.foo.should.equal(obj.foo);
-      riak.loadObject(riakBucket, obj.id, function (returnObj) {
+      riak.getObject(riakBucket, obj.id, function (err, returnObj) {
+        should.not.exist(err);
+        should.exist(returnObj);
         returnObj.id.should.equal(obj.id);
         returnObj.foo.should.equal(obj.foo);
         done();
@@ -87,10 +92,14 @@ describe('riak module', function () {
 
   it('should update an object that gets put', function (done) {
     var obj = {id: 7654, foo: 'foobar'};
-    riak.putObject(riakBucket, obj.id, obj, function (returnObj) {
+    riak.putObject(riakBucket, obj.id, obj, function (err, returnObj) {
+      should.not.exist(err);
+      should.exist(returnObj);
       returnObj.id.should.equal(obj.id);
       returnObj.foo.should.equal(obj.foo);
-      riak.loadObject(riakBucket, obj.id, function (returnObj) {
+      riak.getObject(riakBucket, obj.id, function (err, returnObj) {
+        should.not.exist(err);
+        should.exist(returnObj);        
         returnObj.id.should.equal(obj.id);
         returnObj.foo.should.equal(obj.foo);
         done();
