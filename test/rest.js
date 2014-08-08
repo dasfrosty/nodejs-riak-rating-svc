@@ -92,7 +92,6 @@ describe('Deem REST', function () {
               res.body.rating.should.equal(expected.rating);
               done();
             });
-          // done();
         });
     });
 

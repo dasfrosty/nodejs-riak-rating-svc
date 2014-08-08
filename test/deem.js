@@ -22,18 +22,23 @@ describe('Deem', function () {
     };
 
     it('should return null for a user that does not exist', function (done) {
-      deem.getUser(95846474836363, function (actual) {
+      deem.getUser(95846474836363, function (err, actual) {
+        should.not.exist(err);
         should.not.exist(actual);
         done();
       });
     });
 
     it('should load a user that gets put', function (done) {
-      deem.putUser(expected.userId, expected.email, expected.password, function (actual) {
+      deem.putUser(expected.userId, expected.email, expected.password, function (err, actual) {
+        should.not.exist(err);
+        should.exist(actual);
         actual.userId.should.equal(expected.userId);
         actual.email.should.equal(expected.email);
         actual.password.should.equal(expected.password);
-        deem.getUser(expected.userId, function (actual) {
+        deem.getUser(expected.userId, function (err, actual) {
+          should.not.exist(err);
+          should.exist(actual);
           actual.userId.should.equal(expected.userId);
           actual.email.should.equal(expected.email);
           actual.password.should.equal(expected.password);
@@ -44,11 +49,15 @@ describe('Deem', function () {
 
     it('should update a user that gets put', function (done) {
       var newPassword = '3plane';
-      deem.putUser(expected.userId, expected.email, newPassword, function (actual) {
+      deem.putUser(expected.userId, expected.email, newPassword, function (err, actual) {
+        should.not.exist(err);
+        should.exist(actual);
         actual.userId.should.equal(expected.userId);
         actual.email.should.equal(expected.email);
         actual.password.should.equal(newPassword);
-        deem.getUser(expected.userId, function (actual) {
+        deem.getUser(expected.userId, function (err, actual) {
+          should.not.exist(err);
+          should.exist(actual);
           actual.userId.should.equal(expected.userId);
           actual.email.should.equal(expected.email);
           actual.password.should.equal(newPassword);
@@ -76,12 +85,12 @@ describe('Deem', function () {
     });
 
     it('should load a rating that gets put', function (done) {
-      deem.putUserRating(expected.category, expected.itemId, expected.userId, expected.rating, function (actual) {
+      deem.putUserRating(expected.category, expected.itemId, expected.userId, expected.rating, function (err, actual) {
         actual.category.should.equal(expected.category);
         actual.itemId.should.equal(expected.itemId);
         actual.userId.should.equal(expected.userId);
         actual.rating.should.equal(expected.rating);
-        deem.getUserRating(expected.category, expected.itemId, expected.userId, function (actual) {
+        deem.getUserRating(expected.category, expected.itemId, expected.userId, function (err, actual) {
           actual.category.should.equal(expected.category);
           actual.itemId.should.equal(expected.itemId);
           actual.userId.should.equal(expected.userId);
@@ -93,12 +102,12 @@ describe('Deem', function () {
 
     it('should update a rating that gets put', function (done) {
       var newRating = expected.rating + 1;
-      deem.putUserRating(expected.category, expected.itemId, expected.userId, newRating, function (actual) {
+      deem.putUserRating(expected.category, expected.itemId, expected.userId, newRating, function (err, actual) {
         actual.category.should.equal(expected.category);
         actual.itemId.should.equal(expected.itemId);
         actual.userId.should.equal(expected.userId);
         actual.rating.should.equal(newRating);
-        deem.getUserRating(expected.category, expected.itemId, expected.userId, function (actual) {
+        deem.getUserRating(expected.category, expected.itemId, expected.userId, function (err, actual) {
           actual.category.should.equal(expected.category);
           actual.itemId.should.equal(expected.itemId);
           actual.userId.should.equal(expected.userId);
